@@ -1,0 +1,81 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@section styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="~/css/style.css?v=1.3" />
+}
+
+<div class="scontainer">
+    <div class="sidebar">
+        <button class="sidebar-btn active" data-url="@Url.Action("Index", "Expense")">
+            <i class="fas fa-wallet"></i> Expense Management
+        </button>
+
+        <button class="sidebar-btn" data-url="@Url.Action("Index", "Category")">
+            <i class="fas fa-layer-group"></i> Category Management
+        </button>
+        <button class="sidebar-btn">
+            <i class="fas fa-chart-line"></i> Reports & Analysis
+        </button>
+        <button class="sidebar-btn">
+            <i class="fas fa-cog"></i> Settings & Preferences
+        </button>
+    </div>
+    <div class="content-area" id="content-area">
+        
+    </div>
+</div>
+
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const sidebarButtons = document.querySelectorAll('.sidebar-btn');
+
+        // When a sidebar button is clicked
+        sidebarButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                // Remove active class from all buttons and add to the clicked button
+                sidebarButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                // Get the URL from the data-url attribute
+                const url = button.getAttribute('data-url');
+
+                // Load content into #content-area using AJAX
+                if (url) {
+                    $.ajax({
+                        url: url, // This URL will call the Index action
+                        type: 'GET',
+                        success: function (data) {
+                            $('#content-area').html(data); // Inject only the table into #content-area
+                        },
+                        error: function () {
+                            $('#content-area').html('<p>Error loading content.</p>');
+                        }
+                    });
+                }
+            });
+        });
+
+        // Load the default content (Expense Management) 
+        $(document).ready(function () {
+            const defaultUrl = $(".sidebar-btn.active").attr("data-url");
+            if (defaultUrl) {
+                $.ajax({
+                    url: defaultUrl,
+                    type: 'GET',
+                    success: function (data) {
+                        $('#content-area').html(data); // Inject only the table into #content-area
+                    },
+                    error: function () {
+                        $('#content-area').html('<p>Error loading content.</p>');
+                    }
+                });
+            }
+        });
+
+    </script>
+}
+
+

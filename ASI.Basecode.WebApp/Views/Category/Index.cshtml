@@ -1,0 +1,58 @@
+﻿@model IEnumerable<ASI.Basecode.Data.Models.Category>
+@section styles {
+    <link rel="stylesheet" href="~/css/style.css?v=1.1" />
+}
+
+<div class="catcontainer">
+    <a asp-controller="Category" asp-action="Create" class="btn btn-outline-primary mb-3" style="background-color: green; color: white;">Add Category</a>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary mb-3">Back</a>
+
+    <!-- Filter Form -->
+    <form method="get" asp-action="Index">
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <label for="categoryFilter">Filter by Category</label>
+                <select class="form-control" id="categoryFilter" name="categoryFilter">
+                    <option value="">All Categories</option>
+                    @foreach (var category in ViewBag.Categories)
+                    {
+                        <option value="@category.CategoryID">@category.CategoryName</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="row">
+        @if (Model == null || !Model.Any())
+        {
+            <h4 class="card-text font-weight-bold">No Categories Available</h4>
+        }
+        else
+        {
+            @foreach (var category in Model)
+            {
+                <div class="col-md-12">
+                    <div class="card mb-5 shadow-sm">
+                        <div class="card-body">
+                       
+                            <h4 class="card-text font-weight-bold">
+                                <a asp-controller="Category" asp-action="View" asp-route-id="@category.CategoryID" class="text-dark" style="text-decoration: none;">
+                                    @category.CategoryName
+                                </a>
+                            </h4>
+                           
+                            <div class="mt-3">
+                                <a asp-controller="Category" asp-action="Edit" asp-route-id="@category.CategoryID" class="btn btn-warning text-white">Edit</a>
+                                <a asp-controller="Category" asp-action="Delete" asp-route-id="@category.CategoryID" class="btn btn-danger text-white" onclick="return confirm('Do you wish to delete this category?');">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
